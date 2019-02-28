@@ -18,7 +18,17 @@ def pagerank(A, m):
 
 def potenze(A, x0, tol, maxit):
     """
-    ITA:
+    ENGLISH:
+    Calculates the approximated eigenvector of a matrix
+    Input:
+	A: Matrix
+	x0: Column array
+	tol: when the difference between xk+1 and xk is less than tol, the iteration is stopped
+	maxit: Maximum number of iterations allowed
+    Output:
+	xn: approximated eigenvector
+
+    ITALIAN:
     Calcola l'autovettore approssimato di una matrice
     Input:
         A: Matrice di cui calcolare l'autovettore
@@ -32,17 +42,6 @@ def potenze(A, x0, tol, maxit):
     Lavoro:
         flag: vale true fin quando |x(k) - x(k+1)|>tol
     
-    ENG:
-    Calculates the approximated eigenvector of a matrix
-    Input:
-	A: Matrix
-	x0: Column array
-	tol: when the difference between xk+1 and xk is less than tol, the iteration is stopped
-	maxit: Maximum number of iterations allowed
-    Output:
-	xn: approximated eigenvector
-
-
     """
     xn=x0/linalg.norm(x0)
     flag=True
@@ -66,8 +65,8 @@ def stoc(A):     #Trasforms the adjacency matrix A into a stochastic matrix
         s=sum(A[:,j])
         if s!=1 and s!=0:
             A[:,j]=A[:,j]/s
-        elif s==0:      #If the elements in the columns are all zeros
-            A[:,j]=1/r  #FI do the ratio between 1 and th number of rows, and I put the resulting
+        elif s==0:      #If the elements in the columns are all zeros,
+            A[:,j]=1/r  #I do the ratio between 1 and th number of rows, and I put the resulting
                         #number into every cell of the column
     return A
 

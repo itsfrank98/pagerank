@@ -1,0 +1,104 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Feb 13 17:19:28 2019
+
+@author: franc
+"""
+from numpy import *
+import matplotlib.pyplot as plt
+
+def pagerank(A, m):
+    [r,n]=shape(A)
+    A=stoc(A)
+    E=ones((n,n))
+    G=m*A+(1-m)/n*E
+    x0=ones(shape=(n,1))/n
+    x=potenze(G,x0, 10**-10, 300)
+    return x
+
+def potenze(A, x0, tol, maxit):
+    """
+    ITA:
+    Calcola l'autovettore approssimato di una matrice
+    Input:
+        A: Matrice di cui calcolare l'autovettore
+        x0: Vettore colonna per il quale viene inizialmente moltiplicata la matrice
+        tol: Una volta che la differenza tra il vettore xk+1 e il vettore xk è minore o uguale al
+         valore tol, si interrompe il ciclo iterativo perchè si è raggiunta una buona approssimazione
+         dell'autovettore
+        maxit:numero massimo di iterate consentite
+    Output: 
+        xn: autovettore approssimante
+    Lavoro:
+        flag: vale true fin quando |x(k) - x(k+1)|>tol
+    
+    ENG:
+    Calculates the approximated eigenvector of a matrix
+    Input:
+	A: Matrix
+	x0: Column array
+	tol: when the difference between xk+1 and xk is less than tol, the iteration is stopped
+	maxit: Maximum number of iterations allowed
+    Output:
+	xn: approximated eigenvector
+
+
+    """
+    xn=x0/linalg.norm(x0)
+    flag=True
+    it=0
+    while flag is True and it<maxit:
+        m=xn      #x(k)
+        xn=A.dot(xn)
+        n=xn      #x(k+1)
+        if abs(linalg.norm(m)-linalg.norm(n))<=tol:
+            flag=False
+        else:
+            it+=1
+    print("\nSono state necessarie ",it," iterate\n")
+    return xn/float(sum(xn))
+
+
+def stoc(A):     #Trasforms the adjacency matrix A into a stochastic matrix
+    A=double(copy(A))
+    [r,n]=shape(A)
+    for j in range(0,n):
+        s=sum(A[:,j])
+        if s!=1 and s!=0:
+            A[:,j]=A[:,j]/s
+        elif s==0:      #If the elements in the columns are all zeros
+            A[:,j]=1/r  #FI do the ratio between 1 and th number of rows, and I put the resulting
+                        #number into every cell of the column
+    return A
+
+
+def main():
+    
+    #EXAMPLE
+    
+    A=array([[0,0,0,1,0,0,0,0,0,0,0],
+             [0,0,1,1,1,1,1,1,1,0,0],
+             [0,1,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,1,0,0,0,0,0,0],
+             [0,0,0,0,0,1,1,1,1,1,1],
+             [0,0,0,0,1,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0]])
+    
+    x=pagerank(A, 0.85)
+    print("Vettore normalizzato dei pagerank: \n",x)
+    
+    print("\nGraphic representation of the pagerank values:\n")
+    r=len(x)
+    label= {}
+    for i in range (1,r+1):
+        label[i]=i
+       
+        
+    plt.pie(x, labels=label, autopct='%1.1f%%', startangle=90)
+    plt.tight_layout()
+    plt.axis('equal')
+    plt.show()
